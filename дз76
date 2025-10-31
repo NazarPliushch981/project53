@@ -1,0 +1,192 @@
+#include <iostream>
+#include <string>
+#include <windows.h>
+using namespace std;
+
+class Student {
+private:
+    string name;   // Ім'я
+    int age;       // Вік
+
+public:
+    // без параметрів
+    Student() {
+        name = "Невідомий";
+        age = 0;
+    }
+
+    // з параметрами
+    Student(string n, int a) {
+        name = n;
+        age = a;
+    }
+
+    // Вивід інформації
+    void showInfo() const {
+        cout << "Ім'я: " << name << ", Вік: " << age << endl;
+    }
+
+    // отримання значення
+    string getName() const { return name; }
+    int getAge() const { return age; }
+
+    //задавання значення
+    void setName(string n) { name = n; }
+    void setAge(int a) { age = a; }
+};
+
+//
+class Group {
+private:
+    string groupName;
+    Student* students;
+    int size;
+
+public:
+    // Конструктор
+    Group(string name) {
+        groupName = name;
+        students = nullptr;
+        size = 0;
+    }
+
+    // Деструктор
+    ~Group() {
+        delete[] students; // Звільняємо пам'ять
+    }
+
+    // Додавання студента
+    void addStudent(const Student& s) {
+        Student* temp = new Student[size + 1];
+        for (int i = 0; i < size; i++) {
+            temp[i] = students[i];
+        }
+        temp[size] = s;
+        delete[] students;
+        students = temp;
+        size++;
+        cout << "Студента додано!" << endl;
+    }
+
+    // Видалення студента
+    void removeStudent(string name) {
+        if (size == 0) {
+            cout << "Група порожня!" << endl;
+            return;
+        }
+
+        int index = -1;
+        for (int i = 0; i < size; i++) {
+            if (students[i].getName() == name) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index == -1) {
+            cout << "Студента не знайдено!" << endl;
+            return;
+        }
+
+        Student* temp = new Student[size - 1];
+        for (int i = 0, j = 0; i < size; i++) {
+            if (i != index) {
+                temp[j++] = students[i];
+            }
+        }
+
+        delete[] students;
+        students = temp;
+        size--;
+        cout << "Студента видалено!" << endl;
+    }
+
+    // Вивід усіх студентів
+    void showStudents() const {
+        if (size == 0) {
+            cout << "Немає студентів!" << endl;
+            return;
+        }
+        cout << "\nСтуденти групи \"" << groupName << "\":" << endl;
+        for (int i = 0; i < size; i++) {
+            cout << i + 1 << ". ";
+            students[i].showInfo();
+        }
+    }
+
+    //отримати або змінити назву
+    string getGroupName() const { return groupName; }
+    void setGroupName(string name) { groupName = name; }
+};
+
+int main()   {
+    Group* group = nullptr;
+    int choice;
+
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
+
+    do {
+        cout << "\n МЕНЮ " << endl;
+        cout << "1. Створити групу" << endl;
+        cout << "2. Додати студента" << endl;
+        cout << "3. Видалити студента" << endl;
+        cout << "4. Показати студентів" << endl;
+        cout << "0. Вихід" << endl;
+        cout << "Ваш вибір: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1: {
+            string name;
+            cout << "Введіть назву групи: ";
+            cin >> name;
+            delete group;  // Якщо вже існує
+            group = new Group(name);
+            cout << "Групу \"" << name << "\" створено!" << endl;
+            break;
+        }
+        case 2: {
+            if (!group) {
+                cout << "Спочатку створіть групу!" << endl;
+                break;
+            }
+            string name;
+            int age;
+            cout << "Введіть ім'я: ";
+            cin >> name;
+            cout << "Введіть вік: ";
+            cin >> age;
+            group->addStudent(Student(name, age));
+            break;
+        }
+        case 3: {
+            if (!group) {
+                cout << "Спочатку створіть групу!" << endl;
+                break;
+            }
+            string name;
+            cout << "Введіть ім'я студента: ";
+            cin >> name;
+            group->removeStudent(name);
+            break;
+        }
+        case 4: {
+            if (!group) {
+                cout << "Спочатку створіть групу!" << endl;
+                break;
+            }
+            group->showStudents();
+            break;
+        }
+        case 0:
+            cout << "Вихід" << endl;
+            break;
+        default:
+            cout << "Невірний вибір!" << endl;
+        }
+    } while (choice != 0);
+
+    delete group; // Очищення пам’яті
+    return 0;
+}
