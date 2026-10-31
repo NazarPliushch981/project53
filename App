@@ -1,0 +1,33 @@
+import React from 'react';
+function Me() {
+  return (
+    <div style={{ border: '2px solid black', padding: '15px', width: '300px', backgroundColor: 'lightyellow', margin: '20px auto' }}>
+      <h2 style={{ color: 'blue', textAlign: 'center' }}>Моє Портфоліо)))</h2>
+      <hr />
+      <p><b>ПІБ:</b>Плющ Назар Олегович</p>
+      <p><b>Телефон:</b> +380 97 456 16 52</p>
+      <p><b>Email:</b> nazar.pliushch@gmail.com</p>
+
+      
+      <div style={{ marginTop: '20px', textAlign: 'center' }}>
+        <button onClick={() => alert('Дякую що зайшли на сайт')}>
+          Натисни
+        </button>
+      </div>
+    </div>
+  );
+}
+function App() {
+  return (
+    <div>
+      <h1 style={{ textAlign: 'center' }}>Лабораторна робота 1</h1>
+      <AboutMe />
+      
+      <footer style={{ textAlign: 'center', fontSize: '12px', color: 'gray' }}>
+        Зроблено Мною
+      </footer>
+    </div>
+  );
+}
+
+export default App;
